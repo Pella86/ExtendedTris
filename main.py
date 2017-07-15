@@ -8,6 +8,7 @@ Created on Fri Jul 14 17:12:53 2017
 from tkinter import Tk, Label, Frame, Button, PhotoImage, Menu, StringVar
 
 from random import choice
+import sys, os
 
 class AI:
     
@@ -515,25 +516,37 @@ class PlayerIndicator:
             self.imglabel["image"] = self.imagex
         if win == 2:
             self.str_label.set("TIE: ")
-            self.imglabel["image"] = self.imageb            
+            self.imglabel["image"] = self.imageb    
+            
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception as e:
+        print(e)
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+ 
 
 if __name__ == "__main__":
     print("Hello World")
     
     root = Tk()
     root.images = {}
-    root.images["blank_glyph"] = PhotoImage(file = "./data/blank_glyph.gif")     
-    root.images["x_glyph"] = PhotoImage(file = "./data/x_glyph.gif")
-    root.images["o_glyph"] = PhotoImage(file = "./data/o_glyph.gif")  
-    root.images["blank_blue_glyph"] = PhotoImage(file = "./data/blank_blue_glyph.gif")     
-    root.images["x_blue_glyph"] = PhotoImage(file = "./data/x_blue_glyph.gif")
-    root.images["o_blue_glyph"] = PhotoImage(file = "./data/o_blue_glyph.gif") 
-    root.images["blank_red_glyph"] = PhotoImage(file = "./data/blank_red_glyph.gif")     
-    root.images["x_red_glyph"] = PhotoImage(file = "./data/x_red_glyph.gif")
-    root.images["o_red_glyph"] = PhotoImage(file = "./data/o_red_glyph.gif")
-    root.images["player_image_o"] = PhotoImage(file = "./data/o_player_glyph.gif")
-    root.images["player_image_x"] = PhotoImage(file = "./data/x_player_glyph.gif")   
-    root.images["player_image_blank"] = PhotoImage(file = "./data/blank_player_glyph.gif")
+    root.images["blank_glyph"] = PhotoImage(file = resource_path("./data/blank_glyph.gif"))     
+    root.images["x_glyph"] = PhotoImage(file = resource_path("./data/x_glyph.gif"))
+    root.images["o_glyph"] = PhotoImage(file = resource_path("./data/o_glyph.gif"))  
+    root.images["blank_blue_glyph"] = PhotoImage(file = resource_path("./data/blank_blue_glyph.gif"))     
+    root.images["x_blue_glyph"] = PhotoImage(file = resource_path("./data/x_blue_glyph.gif"))
+    root.images["o_blue_glyph"] = PhotoImage(file = resource_path("./data/o_blue_glyph.gif"))
+    root.images["blank_red_glyph"] = PhotoImage(file = resource_path("./data/blank_red_glyph.gif"))     
+    root.images["x_red_glyph"] = PhotoImage(file = resource_path("./data/x_red_glyph.gif"))
+    root.images["o_red_glyph"] = PhotoImage(file = resource_path("./data/o_red_glyph.gif"))
+    root.images["player_image_o"] = PhotoImage(file = resource_path("./data/o_player_glyph.gif"))
+    root.images["player_image_x"] = PhotoImage(file = resource_path("./data/x_player_glyph.gif"))   
+    root.images["player_image_blank"] = PhotoImage(file = resource_path("./data/blank_player_glyph.gif"))
     
     
     title_label = Label(root, text = " - Extended Tris - ")
