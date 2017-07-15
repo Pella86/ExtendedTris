@@ -5,7 +5,7 @@ Created on Fri Jul 14 17:12:53 2017
 @author: Mauro
 """
 
-from tkinter import Tk, Label, Frame, Button, PhotoImage, Menu, StringVar
+from tkinter import Tk, Label, Frame, Button, PhotoImage, Menu, StringVar, Toplevel
 
 from random import choice
 import sys, os
@@ -528,6 +528,14 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
+def help_cmd():
+    top = Toplevel(root)
+    
+    l = Label(top, image = root.images["help_menu"])
+    l.pack()
+    
  
 
 if __name__ == "__main__":
@@ -547,13 +555,13 @@ if __name__ == "__main__":
     root.images["player_image_o"] = PhotoImage(file = resource_path("./data/o_player_glyph.gif"))
     root.images["player_image_x"] = PhotoImage(file = resource_path("./data/x_player_glyph.gif"))   
     root.images["player_image_blank"] = PhotoImage(file = resource_path("./data/blank_player_glyph.gif"))
+    root.images["help_menu"] = PhotoImage(file = resource_path("./data/help_menu_res.gif"))
     
+    root.wm_title("Extended Tris")
     
     title_label = Label(root, text = " - Extended Tris - ")
     title_label.grid(row = 0, column = 0)
-    
-    
-    
+
     #mycb = CellBoard(root, gl, root.images)
     gl = GameLogic()
     pi = PlayerIndicator(root, root)
@@ -562,6 +570,7 @@ if __name__ == "__main__":
     
     menubar = Menu(root)
     menubar.add_command(label="New Game (not working)", command = new_game )
+    menubar.add_command(label="Help", command = help_cmd)
     menubar.add_command(label="Quit!", command=root.quit)    
     
     root.config(menu=menubar)

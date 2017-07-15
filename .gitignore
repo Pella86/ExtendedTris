@@ -3,4 +3,5 @@
 __pycache__/
 build/
 dist/
+tutorial/
 ExtendedTris.exe.lnk
