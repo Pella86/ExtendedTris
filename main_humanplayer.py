@@ -11,30 +11,34 @@ from random import choice
 
 class AI:
     
-    def __init__(self, cellboard, gl):
+    def __init__(self, cellboard):
         self.cellboard = cellboard
-        self.gl = gl
+        pass
     
-    def check_board(self, coords):
-        bix, smx = divmod(coords[0], 3)
-        biy, smy = divmod(coords[1], 3)    
+    def check_board(self, coord):
+        bix, smx = divmod(self.coords[0], 3)
+        biy, smy = divmod(self.coords[1], 3)    
         possibilities = []         
-        if self.gl.board.get_big_cell_bc(smx, smy).isfull():
+        if self.cellboard.get_big_cell_bc(smx, smy).isfull():
             # get all non occupied cells
-            for cell in self.cellboard.cell_matrix:
-                if self.gl.board.get_cell(cell.coords[0],cell.coords[1]).value is None:
+            for cell in self.cellboard.cellmatrix:
+                if cell.value is None:
                     possibilities.append(cell)
         else:
             bc = self.cellboard.get_big_cell_bc(smx, smy) 
             for cell in bc:
-                if self.gl.board.get_cell(cell.coords[0],cell.coords[1]).value is None:
+                if cell.value is None:
                     possibilities.append(cell)
+        print("Possible cells:")
+        print(possibilities)
         return possibilities
         
     def make_move(self, coord):
         # chose random from the list
         p = self.check_board(coord)
         c = choice(p)
+        print("choice:")
+        print(c.coords)
         c.press()
 
 def check_values(l):
@@ -51,12 +55,14 @@ def check_win(get_func, matrix):
     print("Checking win..")
     row = []
     col = []
-    
+    diag = []
     
     print("checking rows")
     for i in range(3):
         for j in range(3):
             row.append(get_func(i, j))
+        print([cell.value for cell in row])
+        print(check_values(row))
         if check_values(row):
             return row[0].value
         row =[]
@@ -66,12 +72,10 @@ def check_win(get_func, matrix):
         for i in range(3):
             col.append(get_func(i, j))
         if check_values(col):
-            return col[0].value
+            return  col[0].value
         col =[]
-        
     print("checking diags")
     diag_idx = [(0,0), (1,1), (2,2)]
-    diag = []
     for idx in diag_idx:
         diag.append(get_func(idx[0],idx[1]))
     
@@ -79,7 +83,6 @@ def check_win(get_func, matrix):
         return  diag[0].value  
 
     diag_idx = [(0,2), (1,1), (2,0)]
-    diag = []
     for idx in diag_idx:
         diag.append(get_func(idx[0],idx[1]))
     
@@ -148,7 +151,6 @@ class BigCell:
 class Board:
     
     def __init__(self):
-        print(" init board ")
         self.rows = 3
         self.cols = 3
         
@@ -244,11 +246,13 @@ class Cell:
         self.cb = cb
         self.pi = pi
         
-        self.ai = AI(self.cb, self.gl)
+        self.ai = AI(self.cb)
     
     def press(self):
+        # gather player infos
+        
         # upload the according picture
-        if gl.board.get_big_cell(self.coords[0], self.coords[1]).value is None:
+        if gl.board.get_big_cell(self.coords[0], self.coords[1]).value == None:
             if self.gl.player == 1:  
                 self.b.config(image = self.images["x_glyph"])
             else:
@@ -288,8 +292,6 @@ class Cell:
                 # display inactives
                 self.gl.next_player()
                 self.pi.set_player(self.gl.player)
-                if self.gl.player == 0:
-                    self.ai.make_move(self.coords)
                 
             else:
                 print("Somebody won:", win)
@@ -324,8 +326,6 @@ class Cell:
                     self.cb.make_inactives(self.coords)
                 self.gl.next_player() 
                 self.pi.set_player(self.gl.player)
-                if self.gl.player == 0:
-                    self.ai.make_move(self.coords)
             
         else:
             print("somebody has won in this quadrant")
@@ -340,8 +340,7 @@ class Cell:
             # display inactives
             self.gl.next_player() 
             self.pi.set_player(self.gl.player)
-            if self.gl.player == 0:
-                self.ai.make_move(self.coords)            
+            
             
         
 
@@ -420,7 +419,7 @@ class CellBoard:
         for i in range(3):
             for j in range(3):
                 idxmatrix = bigx * 27 + i* 9 + bigy * 3 + j
-                cellsofbig.append(self.cell_matrix[idxmatrix])
+                cellsofbig.appned(self.cell_matrix[idxmatrix])
         return cellsofbig
     
     def make_big_cell_active(self, bigx, bigy):
@@ -467,12 +466,8 @@ class CellBoard:
     
 
 def new_game():
-    print("\n - new game -")
-    ngl = GameLogic()
-    
-    npi = PlayerIndicator(root, root)
-    npi.mainFrame.grid(row = 1, column = 0)
-    CellBoard(root, ngl, root.images, npi)
+    gl = GameLogic()
+    CellBoard(root, gl, root.images, pi)
     
 
 class PlayerIndicator:
@@ -547,8 +542,10 @@ if __name__ == "__main__":
     pi.mainFrame.grid(row = 1, column = 0)
     CellBoard(root, gl, root.images, pi) 
     
+    
+    
     menubar = Menu(root)
-    menubar.add_command(label="New Game (not working)", command = new_game )
+    menubar.add_command(label="New Game", command = new_game )
     menubar.add_command(label="Quit!", command=root.quit)    
     
     root.config(menu=menubar)
