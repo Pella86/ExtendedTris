@@ -5,14 +5,20 @@ Created on Fri Jul 14 17:12:53 2017
 @author: Mauro
 """
 
-from tkinter import Tk, Label, Frame, Button, PhotoImage, Menu, StringVar, Toplevel
+from tkinter import (Tk, Label, Frame, Button, PhotoImage, Menu, StringVar, 
+                     Toplevel)
 
 from random import choice
 import sys, os
 
 class AI:
+    ''' Small random based AI that plays after the player'''
     
     def __init__(self, cellboard, gl):
+        ''' the AI requires to know the game logic and the access to <press>
+        the required cell in the game
+        '''
+        
         self.cellboard = cellboard
         self.gl = gl
     
